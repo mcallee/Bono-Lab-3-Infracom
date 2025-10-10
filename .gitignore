@@ -1,0 +1,8 @@
+/build/
+*.o
+*.out
+*.log
+.DS_Store
+captures/*.pcap
+quic/certs/*.key
+quic/certs/*.crt
