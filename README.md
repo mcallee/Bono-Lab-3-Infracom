@@ -1,17 +1,13 @@
-# Bono Lab 3 – Infracom (QUIC)
-Pub/Sub en C usando QUIC (MsQuic). QUIC corre sobre UDP pero da fiabilidad/orden (por stream) y TLS 1.3.
+# Híbrido “mini-QUIC” en C puro (sin dependencias)
 
-## Requisitos
-brew install libmsquic openssl@3
+Este tercer programa **corre sobre UDP** pero agrega en **user-space**:
+- Handshake ligero (`HELLO/HELLO_OK`)
+- Confiabilidad: números de secuencia `seq`, **ACK** y **retransmisión** con timeout (stop-and-wait)
+- Control de flujo mínimo (ventana efectiva = 1)
+- Esquema Pub/Sub por **tópico** con un **broker**
+
+> **No es QUIC real**: no hay TLS 1.3, protección de encabezados ni múltiples streams. Es un esqueleto educativo para el lab.
 
 ## Compilar
-make quic
-
-## Ejecutar
-./build/broker_quic 5003 quic/certs/server.crt quic/certs/server.key
-./build/subscriber_quic 127.0.0.1 5003 AvsB
-./build/publisher_quic 127.0.0.1 5003 AvsB 10
-
-## Certificado (self-signed)
-mkdir -p quic/certs
-openssl req -nodes -new -x509 -keyout quic/certs/server.key -out quic/certs/server.crt -subj "/CN=localhost"
+```bash
+make
