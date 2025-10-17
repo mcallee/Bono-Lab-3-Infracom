@@ -1,4 +1,4 @@
-# Híbrido “mini-QUIC” en C puro (sin dependencias)
+# Híbrido “mini-QUIC” en C
 
 Este tercer programa **corre sobre UDP** pero agrega en **user-space**:
 - Handshake ligero (`HELLO/HELLO_OK`)
