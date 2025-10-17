@@ -1,27 +1,24 @@
-CC      := gcc
-CFLAGS  := -Wall -Wextra -O2 -std=c11
+CC ?= cc
+CFLAGS ?= -O2 -Wall -Wextra -std=c11
 
-# Ajusta /opt/homebrew a /usr/local si tu Homebrew es Intel
-QUIC_INC  := -I/opt/homebrew/include -I/opt/homebrew/opt/openssl@3/include
-QUIC_LIBS := -L/opt/homebrew/lib -L/opt/homebrew/opt/openssl@3/lib -lmsquic -lssl -lcrypto
+BUILD_DIR := build
+SRC_DIR := quic
 
-QUIC_BROKER := build/broker_quic
-QUIC_PUB    := build/publisher_quic
-QUIC_SUB    := build/subscriber_quic
+all: $(BUILD_DIR)/broker_quic $(BUILD_DIR)/subscriber_quic $(BUILD_DIR)/publisher_quic
 
-all: quic
-quic: $(QUIC_BROKER) $(QUIC_PUB) $(QUIC_SUB)
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-$(QUIC_BROKER): quic/broker_quic.c
-$(CC) $(CFLAGS) $(QUIC_INC) $< -o $@ $(QUIC_LIBS)
+$(BUILD_DIR)/broker_quic: $(SRC_DIR)/broker_quic.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
 
-$(QUIC_PUB): quic/publisher_quic.c
-$(CC) $(CFLAGS) $(QUIC_INC) $< -o $@ $(QUIC_LIBS)
+$(BUILD_DIR)/subscriber_quic: $(SRC_DIR)/subscriber_quic.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
 
-$(QUIC_SUB): quic/subscriber_quic.c
-$(CC) $(CFLAGS) $(QUIC_INC) $< -o $@ $(QUIC_LIBS)
+$(BUILD_DIR)/publisher_quic: $(SRC_DIR)/publisher_quic.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
-rm -rf build/*
+	rm -rf $(BUILD_DIR) *.o
 
-.PHONY: all quic clean
+.PHONY: all clean
